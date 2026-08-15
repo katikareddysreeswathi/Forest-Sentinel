@@ -1,0 +1,2598 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Forest Sentinel</title>
+
+<style>
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+:root {
+    --bg: #061b2b;
+    --panel: #082b3a;
+    --panel2: #0d3b4a;
+    --green: #13b8c4;
+    --green2: #087ca5;
+    --text: #eefbff;
+    --muted: #8fc7d6;
+    --red: #ff4d5e;
+    --orange: #ffad42;
+    --yellow: #f1d85b;
+    --border: rgba(160,225,238,0.16);
+}
+
+body {
+    background:
+        radial-gradient(circle at 15% 10%, rgba(19,184,196,.12), transparent 28%),
+        radial-gradient(circle at 85% 85%, rgba(8,124,165,.16), transparent 30%),
+        linear-gradient(135deg, #061b2b 0%, #082b3a 52%, #061f30 100%);
+    color: var(--text);
+    min-height: 100vh;
+}
+
+/* ================= LOGIN ================= */
+
+.login-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background:
+        radial-gradient(
+            circle at 20% 20%,
+            rgba(19,184,196,.18),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 80% 80%,
+            rgba(8,124,165,.20),
+            transparent 30%
+        ),
+        var(--bg);
+}
+
+.login-card {
+    width: 420px;
+    max-width: 90%;
+    padding: 40px;
+
+    background: rgba(8,43,58,.96);
+
+    border: 1px solid var(--border);
+    border-radius: 24px;
+
+    box-shadow: 0 30px 100px rgba(0,0,0,.5);
+
+    text-align: center;
+}
+
+.logo {
+    font-size: 54px;
+    margin-bottom: 10px;
+}
+
+.login-card h1 {
+    font-size: 30px;
+}
+
+.login-card p {
+    color: var(--muted);
+    margin: 10px 0 30px;
+}
+
+.login-card input,
+.login-card select {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 14px;
+
+    border-radius: 10px;
+    border: 1px solid var(--border);
+
+    background: #071f2c;
+    color: white;
+}
+
+.primary-btn {
+    width: 100%;
+    padding: 14px;
+
+    border: none;
+    border-radius: 10px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--green),
+            var(--green2)
+        );
+
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+.primary-btn:hover {
+    transform: translateY(-1px);
+}
+
+.demo-note {
+    margin-top: 20px;
+    font-size: 12px;
+    color: var(--muted);
+}
+
+/* ================= APPLICATION ================= */
+
+.app {
+    display: none;
+    min-height: 100vh;
+}
+
+.sidebar {
+    position: fixed;
+
+    width: 240px;
+    height: 100vh;
+
+    background:
+        linear-gradient(180deg, #061f30 0%, #082b3a 55%, #061b2b 100%);
+
+    border-right: 1px solid var(--border);
+
+    padding: 25px 15px;
+}
+
+.brand {
+    font-size: 21px;
+    font-weight: bold;
+
+    margin-bottom: 35px;
+    padding: 0 10px;
+}
+
+.brand span {
+    color: var(--green);
+}
+
+.nav-item {
+    padding: 13px 15px;
+    margin: 6px 0;
+
+    border-radius: 10px;
+
+    color: var(--muted);
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+.nav-item:hover,
+.nav-item.active {
+    background: rgba(19,184,196,.14);
+    color: white;
+}
+
+.main {
+    margin-left: 240px;
+    padding: 28px;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 25px;
+}
+
+.topbar h1 {
+    font-size: 27px;
+}
+
+.user-info {
+    color: var(--muted);
+    font-size: 14px;
+}
+
+/* ================= DASHBOARD ================= */
+
+.stats {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4,1fr);
+
+    gap: 15px;
+
+    margin-bottom: 20px;
+}
+
+.card {
+    background: var(--panel);
+
+    border: 1px solid var(--border);
+
+    border-radius: 17px;
+
+    padding: 20px;
+}
+
+.stat-label {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.stat-value {
+    font-size: 32px;
+    font-weight: bold;
+
+    margin: 8px 0;
+}
+
+.danger {
+    color: var(--red);
+}
+
+.warning {
+    color: var(--orange);
+}
+
+.safe {
+    color: var(--green);
+}
+
+.dashboard-grid {
+    display: grid;
+
+    grid-template-columns:
+        2fr 1fr;
+
+    gap: 20px;
+}
+
+.section-title {
+    font-size: 17px;
+    margin-bottom: 16px;
+}
+
+/* ================= MAP ================= */
+
+.map {
+    height: 430px;
+
+    border-radius: 15px;
+
+    position: relative;
+
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            30deg,
+            rgba(255,255,255,.025) 12%,
+            transparent 12.5%,
+            transparent 87%,
+            rgba(255,255,255,.025) 87.5%
+        ),
+        linear-gradient(
+            150deg,
+            rgba(255,255,255,.025) 12%,
+            transparent 12.5%,
+            transparent 87%,
+            rgba(255,255,255,.025) 87.5%
+        ),
+        #123525;
+
+    background-size: 60px 60px;
+
+    border: 1px solid var(--border);
+}
+
+.map::before {
+    content: "FOREST RESERVE";
+
+    position: absolute;
+
+    top: 18px;
+    left: 20px;
+
+    color: rgba(180,235,245,.22);
+
+    font-size: 40px;
+
+    font-weight: bold;
+
+    transform: rotate(-10deg);
+}
+
+.zone {
+    position: absolute;
+
+    width: 100px;
+    height: 75px;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    font-weight: bold;
+    font-size: 12px;
+
+    cursor: pointer;
+
+    border:
+        2px solid
+        rgba(255,255,255,.3);
+
+    transition: .2s;
+}
+
+.zone:hover {
+    transform: scale(1.08);
+}
+
+.zone.green {
+    background: rgba(19,184,196,.35);
+}
+
+.zone.yellow {
+    background: rgba(241,216,91,.35);
+}
+
+.zone.orange {
+    background: rgba(255,173,66,.45);
+}
+
+.zone.red {
+    background: rgba(255,77,94,.55);
+
+    box-shadow:
+        0 0 30px
+        rgba(255,77,94,.35);
+}
+
+.z1 {
+    left: 12%;
+    top: 20%;
+}
+
+.z2 {
+    left: 38%;
+    top: 15%;
+}
+
+.z3 {
+    left: 66%;
+    top: 24%;
+}
+
+.z4 {
+    left: 42%;
+    top: 48%;
+}
+
+.z5 {
+    left: 72%;
+    top: 62%;
+}
+
+.z6 {
+    left: 14%;
+    top: 67%;
+}
+
+.officer {
+    position: absolute;
+    font-size: 23px;
+
+    animation:
+        pulse 1.5s infinite;
+}
+
+.o1 {
+    left: 50%;
+    top: 70%;
+}
+
+.o2 {
+    left: 78%;
+    top: 32%;
+}
+
+.o3 {
+    left: 25%;
+    top: 45%;
+}
+
+@keyframes pulse {
+
+    50% {
+        transform: scale(1.2);
+    }
+
+}
+
+.map-legend {
+    position: absolute;
+
+    bottom: 15px;
+    left: 15px;
+
+    display: flex;
+
+    gap: 12px;
+
+    background:
+        rgba(0,0,0,.5);
+
+    padding: 9px 12px;
+
+    border-radius: 10px;
+
+    font-size: 11px;
+}
+
+/* ================= AI ================= */
+
+.ai-card {
+    background:
+        linear-gradient(
+            145deg,
+            rgba(19,184,196,.14),
+            transparent
+        ),
+        var(--panel);
+
+    border:
+        1px solid
+        rgba(32,199,122,.2);
+}
+
+.ai-icon {
+    font-size: 30px;
+}
+
+.ai-title {
+    font-size: 19px;
+    margin: 10px 0;
+}
+
+.ai-text {
+    color: var(--muted);
+
+    line-height: 1.6;
+
+    font-size: 14px;
+}
+
+.recommendation {
+    margin-top: 15px;
+
+    padding: 14px;
+
+    background:
+        rgba(255,173,66,.08);
+
+    border:
+        1px solid
+        rgba(255,173,66,.2);
+
+    border-radius: 12px;
+}
+
+.small-btn {
+    margin-top: 14px;
+
+    padding: 10px 15px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background:
+        var(--green2);
+
+    color: white;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+.small-btn:hover {
+    transform: translateY(-1px);
+
+    background:
+        var(--green);
+}
+
+/* ================= PANELS ================= */
+
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+.panel-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2,1fr);
+
+    gap: 20px;
+}
+
+.risk-score {
+    font-size: 65px;
+
+    font-weight: bold;
+
+    color: var(--red);
+
+    text-align: center;
+
+    margin: 20px;
+}
+
+.progress {
+    height: 10px;
+
+    background:
+        #172b22;
+
+    border-radius: 20px;
+
+    overflow: hidden;
+}
+
+.progress div {
+    height: 100%;
+
+    width: 0%;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--orange),
+            var(--red)
+        );
+
+    transition:
+        width .7s ease;
+}
+
+/* ================= INCIDENT ================= */
+
+.upload-box {
+    border:
+        2px dashed
+        rgba(255,255,255,.15);
+
+    padding: 35px;
+
+    text-align: center;
+
+    border-radius: 15px;
+
+    margin-top: 15px;
+}
+
+.preview {
+    max-width: 100%;
+    max-height: 250px;
+
+    margin-top: 20px;
+
+    border-radius: 12px;
+
+    display: none;
+}
+
+.result-box {
+    margin-top: 20px;
+
+    padding: 20px;
+
+    background:
+        rgba(255,77,94,.08);
+
+    border:
+        1px solid
+        rgba(255,77,94,.2);
+
+    border-radius: 15px;
+
+    display: none;
+}
+
+/* ================= SOS ================= */
+
+.sos-container {
+    text-align: center;
+
+    padding: 30px;
+}
+
+.sos-button {
+    width: 180px;
+    height: 180px;
+
+    border-radius: 50%;
+
+    border:
+        8px solid
+        rgba(255,77,94,.15);
+
+    background:
+        var(--red);
+
+    color: white;
+
+    font-size: 32px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 0 50px
+        rgba(255,77,94,.3);
+
+    animation:
+        sosPulse 2s infinite;
+}
+
+@keyframes sosPulse {
+
+    50% {
+        box-shadow:
+            0 0 80px
+            rgba(255,77,94,.6);
+    }
+
+}
+
+.sos-result {
+    display: none;
+
+    margin-top: 30px;
+
+    padding: 25px;
+
+    border-radius: 15px;
+
+    background:
+        rgba(255,77,94,.08);
+
+    border:
+        1px solid
+        rgba(255,77,94,.3);
+}
+
+/* ================= PATROL ================= */
+
+.route {
+    padding: 20px;
+
+    border-left:
+        3px solid
+        var(--green);
+}
+
+.route-item {
+    padding: 15px;
+
+    margin: 8px 0;
+
+    background:
+        #10251c;
+
+    border-radius: 10px;
+}
+
+/* ================= TABLE ================= */
+
+table {
+    width: 100%;
+
+    border-collapse:
+        collapse;
+}
+
+th,
+td {
+    text-align: left;
+
+    padding: 14px;
+
+    border-bottom:
+        1px solid
+        var(--border);
+}
+
+th {
+    color: var(--muted);
+
+    font-size: 12px;
+}
+
+.status {
+    padding: 5px 9px;
+
+    border-radius: 20px;
+
+    font-size: 11px;
+}
+
+.status.red {
+    background:
+        rgba(255,77,94,.15);
+
+    color:
+        var(--red);
+}
+
+.status.green {
+    background:
+        rgba(32,199,122,.15);
+
+    color:
+        var(--green);
+}
+
+.status.yellow {
+    background:
+        rgba(241,216,91,.15);
+
+    color:
+        var(--yellow);
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:900px) {
+
+    .sidebar {
+        width: 70px;
+    }
+
+    .brand span,
+    .nav-text {
+        display: none;
+    }
+
+    .main {
+        margin-left: 70px;
+    }
+
+    .stats {
+        grid-template-columns:
+            repeat(2,1fr);
+    }
+
+    .dashboard-grid,
+    .panel-grid {
+        grid-template-columns:
+            1fr;
+    }
+
+}
+
+@media(max-width:600px) {
+
+    .main {
+        padding: 15px;
+    }
+
+    .stats {
+        grid-template-columns:
+            1fr;
+    }
+
+    .topbar h1 {
+        font-size: 21px;
+    }
+
+}
+
+</style>
+
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+</head>
+
+<body>
+
+<!-- ================= LOGIN ================= -->
+
+<div class="login-screen" id="loginScreen">
+
+    <div class="login-card">
+
+        <div class="logo">🌳</div>
+
+        <h1>Forest Sentinel</h1>
+
+        <p>
+            Predict. Patrol. Protect.
+        </p>
+
+        <input
+            type="text"
+            id="username"
+            placeholder="Enter officer name"
+            value="Officer 07"
+        >
+
+        <select id="role">
+
+            <option>Forest Officer</option>
+
+            <option>Range Officer</option>
+
+            <option>Admin</option>
+
+        </select>
+
+        <button
+            class="primary-btn"
+            onclick="login()"
+        >
+            Enter Forest Sentinel
+        </button>
+
+        <div class="demo-note">
+            Competition MVP • AI Forest Protection System
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ================= APPLICATION ================= -->
+
+<div class="app" id="app">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            🌳 <span>Forest Sentinel</span>
+        </div>
+
+        <div
+            class="nav-item active"
+            onclick="showPage('dashboard',this)"
+        >
+            🏠
+            <span class="nav-text">
+                Dashboard
+            </span>
+        </div>
+
+        <div
+            class="nav-item"
+            onclick="showPage('risk',this)"
+        >
+            🔥
+            <span class="nav-text">
+                AI Risk Engine
+            </span>
+        </div>
+
+        <div
+            class="nav-item"
+            onclick="showPage('patrol',this)"
+        >
+            🧭
+            <span class="nav-text">
+                AI Patrol
+            </span>
+        </div>
+
+        <div
+            class="nav-item"
+            onclick="showPage('incident',this)"
+        >
+            📸
+            <span class="nav-text">
+                AI Vision
+            </span>
+        </div>
+
+        <div
+            class="nav-item"
+            onclick="showPage('incidents',this)"
+        >
+            🚨
+            <span class="nav-text">
+                Incidents
+            </span>
+        </div>
+
+        <div
+            class="nav-item"
+            onclick="showPage('sos',this)"
+        >
+            🆘
+            <span class="nav-text">
+                SOS
+            </span>
+        </div>
+
+        <div
+            class="nav-item"
+            onclick="showPage('analytics',this)"
+        >
+            📊
+            <span class="nav-text">
+                Analytics
+            </span>
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN -->
+
+    <main class="main">
+
+        <div class="topbar">
+
+            <div>
+
+                <h1 id="pageTitle">
+                    Forest Intelligence Dashboard
+                </h1>
+
+                <div class="user-info">
+                    AI-powered forest protection command center
+                </div>
+
+            </div>
+
+            <div class="user-info">
+
+                👮
+                <span id="currentUser">
+                    Officer 07
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= DASHBOARD ================= -->
+
+        <section
+            class="page active"
+            id="dashboard"
+        >
+
+            <div class="stats">
+
+                <!-- FIRE RISK -->
+
+                <div class="card">
+
+                    <div class="stat-label">
+                        🔥 FIRE RISK
+                    </div>
+
+                    <div
+                        id="dashboardRiskScore"
+                        class="stat-value danger"
+                    >
+                        91%
+                    </div>
+
+                    <div
+                        id="dashboardRiskStatus"
+                        class="stat-label"
+                    >
+                        Beat 4 • Critical
+                    </div>
+
+                </div>
+
+
+                <!-- ACTIVE OFFICERS -->
+
+                <div class="card">
+                    <div class="stat-label">
+                        👮 ACTIVE OFFICERS
+                    </div>
+                    <div class="stat-value" id="activeOfficers">
+                        24
+                    </div>
+                    <div class="stat-label" id="officerSubtext">
+                        18 currently patrolling
+                    </div>
+                </div>
+
+
+                <!-- ACTIVE INCIDENTS -->
+
+                <div class="card">
+                    <div class="stat-label">
+                        🚨 ACTIVE INCIDENTS
+                    </div>
+                    <div class="stat-value warning" id="activeIncidents">
+                        07
+                    </div>
+                    <div class="stat-label" id="incidentSubtext">
+                        2 require attention
+                    </div>
+                </div>
+
+
+                <!-- PATROL COVERAGE -->
+
+                <div class="card">
+                    <div class="stat-label">
+                        🧭 PATROL COVERAGE
+                    </div>
+                    <div class="stat-value safe" id="patrolCoverage">
+                        82%
+                    </div>
+                    <div class="stat-label" id="patrolSubtext">
+                        +14% today
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="dashboard-grid">
+
+                <!-- MAP -->
+
+                <div class="card">
+
+                    <div class="section-title">
+                        🗺️ AI Forest Risk Map
+                    </div>
+
+                    <div class="map">
+
+                        <div
+                            class="zone green z1"
+                            onclick="zoneInfo(1)"
+                        >
+                            BEAT 1
+                        </div>
+
+                        <div
+                            class="zone yellow z2"
+                            onclick="zoneInfo(2)"
+                        >
+                            BEAT 2
+                        </div>
+
+                        <div
+                            class="zone orange z3"
+                            onclick="zoneInfo(3)"
+                        >
+                            BEAT 3
+                        </div>
+
+                        <div
+                            class="zone red z4"
+                            onclick="zoneInfo(4)"
+                        >
+                            BEAT 4
+                        </div>
+
+                        <div
+                            class="zone green z5"
+                            onclick="zoneInfo(5)"
+                        >
+                            BEAT 5
+                        </div>
+
+                        <div
+                            class="zone yellow z6"
+                            onclick="zoneInfo(6)"
+                        >
+                            BEAT 6
+                        </div>
+
+                        <div class="officer o1">
+                            👮
+                        </div>
+
+                        <div class="officer o2">
+                            👮
+                        </div>
+
+                        <div class="officer o3">
+                            👮
+                        </div>
+
+                        <div class="map-legend">
+                            🟢 Low
+                            🟡 Moderate
+                            🟠 High
+                            🔴 Critical
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- AI CARD -->
+
+                <div class="card ai-card">
+
+                    <div class="ai-icon">
+                        🤖
+                    </div>
+
+                    <div class="ai-title">
+                        AI Forest Sentinel
+                    </div>
+
+                    <div class="ai-text">
+                        Our AI continuously analyzes weather,
+                        historical incidents, vegetation dryness
+                        and patrol coverage.
+                    </div>
+
+
+                    <div class="recommendation">
+
+    <b>🔥 AI ALERT</b>
+
+    <p style="margin-top:8px;">
+        <span id="alertBeat">Beat 4</span>
+        has a fire-risk score of
+        <b>
+            <span id="alertRiskScore">--</span>
+        </b>.
+    </p>
+
+    <p style="margin-top:8px;">
+        Recommended action:
+        <b id="dashboardRecommendation">
+            Analyzing...
+        </b>
+    </p>
+
+</div>
+
+
+                    <button
+                        class="small-btn"
+                        onclick="runRiskAnalysis()"
+                    >
+                        🤖 Run AI Analysis
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= RISK ENGINE ================= -->
+
+        <section
+            class="page"
+            id="risk"
+        >
+
+            <div class="panel-grid">
+
+                <div class="card">
+
+                    <div class="section-title">
+                        🧠 AI Forest Risk Engine
+                    </div>
+
+                    <p class="ai-text">
+
+                        Analyze environmental and historical
+                        conditions to estimate forest fire risk.
+
+                    </p>
+
+                    <br>
+
+                    <table>
+
+                        <tr>
+                            <td>Temperature</td>
+                            <td>
+                                <b>38°C</b>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>Humidity</td>
+                            <td>
+                                <b>21%</b>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>Rainfall</td>
+                            <td>
+                                <b>2 mm</b>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>Vegetation Dryness</td>
+                            <td class="danger">
+                                <b>HIGH</b>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>Previous Fire Incidents</td>
+                            <td>
+                                <b>7</b>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>Patrol Coverage</td>
+                            <td class="danger">
+                                <b>32%</b>
+                            </td>
+                        </tr>
+
+                    </table>
+
+
+                    <button
+                        class="small-btn"
+                        onclick="runRiskAnalysis()"
+                    >
+                        🔍 Calculate Risk
+                    </button>
+
+                </div>
+
+
+                <!-- AI PREDICTION -->
+
+                <div class="card">
+
+                    <div class="section-title">
+                        AI Prediction
+                    </div>
+
+                    <div
+                        class="risk-score"
+                        id="riskEngineScore"
+                    >
+                        91%
+                    </div>
+
+                    <div style="text-align:center">
+
+                        <span
+                            class="status red"
+                            id="riskStatus"
+                        >
+                            CRITICAL FIRE RISK
+                        </span>
+
+                    </div>
+
+                    <br>
+
+                    <div class="progress">
+
+                        <div
+                            id="riskProgress"
+                            style="width:91%"
+                        ></div>
+
+                    </div>
+
+                    <br>
+
+                    <p
+                        class="ai-text"
+                        id="riskMessage"
+                    >
+                        High probability of forest fire
+                        in Beat 4.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= PATROL ================= -->
+
+        <section
+            class="page"
+            id="patrol"
+        >
+
+            <div class="panel-grid">
+
+                <div class="card">
+
+                    <div class="section-title">
+                        🤖 AI Patrol Optimizer
+                    </div>
+
+                    <p class="ai-text">
+
+                        AI prioritizes forest zones according
+                        to risk, patrol gaps and distance.
+
+                    </p>
+
+                    <button
+                        class="small-btn"
+                        onclick="optimizePatrol()"
+                    >
+                        🚀 Optimize Patrol
+                    </button>
+
+                    <div
+                        id="patrolResult"
+                        style="margin-top:20px"
+                    >
+
+                        <div class="route">
+
+                            <div class="route-item">
+                                🔴
+                                <b>
+                                    Priority 1 — Beat 4
+                                </b>
+
+                                <br>
+
+                                Fire Risk:
+                                <b id="patrolRisk1">
+                                    91%
+                                </b>
+                            </div>
+
+
+                            <div class="route-item">
+
+                                🟠
+
+                                <b>
+                                    Priority 2 — Beat 3
+                                </b>
+
+                                <br>
+
+                                Fire Risk:
+                                72%
+
+                            </div>
+
+
+                            <div class="route-item">
+
+                                🟡
+
+                                <b>
+                                    Priority 3 — Beat 6
+                                </b>
+
+                                <br>
+
+                                Fire Risk:
+                                54%
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="card ai-card">
+
+                    <div class="section-title">
+                        👮 Recommended Officer
+                    </div>
+
+                    <div style="font-size:40px">
+                        👮
+                    </div>
+
+                    <h2
+                        style="margin:10px 0"
+                        id="patrolOfficer"
+                    >
+                        Officer 07
+                    </h2>
+
+                    <p class="ai-text">
+
+                        Nearest available officer to
+                        critical zone.
+
+                    </p>
+
+                    <br>
+
+                    <table>
+
+                        <tr>
+                            <td>Distance</td>
+                            <td>
+                                <b>3.2 km</b>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>Battery</td>
+                            <td>
+                                <b>82%</b>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>Status</td>
+                            <td class="safe">
+                                <b>AVAILABLE</b>
+                            </td>
+                        </tr>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= AI VISION ================= -->
+
+        <section
+            class="page"
+            id="incident"
+        >
+
+            <div class="card">
+
+                <div class="section-title">
+                    📸 AI Incident Vision
+                </div>
+
+                <p class="ai-text">
+
+                    Upload an incident image for AI-assisted
+                    classification.
+
+                </p>
+
+                <div class="upload-box">
+
+                    <input
+                        type="file"
+                        id="imageInput"
+                        accept="image/*"
+                        onchange="analyzeImage()"
+                    >
+
+                    <img
+                        id="preview"
+                        class="preview"
+                        alt="Uploaded incident preview"
+                    >
+
+                    <div
+                        id="visionLoading"
+                        style="
+                            display:none;
+                            margin-top:20px;
+                        "
+                    >
+                        🤖 AI analyzing image...
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="result-box"
+                    id="visionResult"
+                >
+
+                    <h2>
+                        🔥 SMOKE / FIRE DETECTED
+                    </h2>
+
+                    <br>
+
+                    <p>
+                        <b>Confidence:</b>
+                        94.7%
+                    </p>
+
+                    <p>
+                        <b>Severity:</b>
+
+                        <span class="danger">
+                            HIGH
+                        </span>
+                    </p>
+
+                    <p>
+                        <b>Location:</b>
+                        Beat 4
+                    </p>
+
+                    <p>
+                        <b>Recommendation:</b>
+                        Immediate field verification
+                    </p>
+
+                    <br>
+
+                    <button
+                        class="small-btn"
+                        onclick="createIncident()"
+                    >
+                        🚨 Create Incident
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= INCIDENTS ================= -->
+
+        <section
+            class="page"
+            id="incidents"
+        >
+
+            <div class="card">
+
+                <div class="section-title">
+                    🚨 Incident Management
+                </div>
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>ID</th>
+                            <th>TYPE</th>
+                            <th>LOCATION</th>
+                            <th>AI RISK</th>
+                            <th>STATUS</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="incidentTable">
+
+                        <tr>
+
+                            <td>
+                                #FG-1024
+                            </td>
+
+                            <td>
+                                🔥 Fire
+                            </td>
+
+                            <td>
+                                Beat 4
+                            </td>
+
+                            <td class="danger">
+                                96%
+                            </td>
+
+                            <td>
+
+                                <span class="status red">
+                                    CRITICAL
+                                </span>
+
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>
+                                #FG-1023
+                            </td>
+
+                            <td>
+                                🌲 Illegal Logging
+                            </td>
+
+                            <td>
+                                Beat 3
+                            </td>
+
+                            <td class="warning">
+                                76%
+                            </td>
+
+                            <td>
+
+                                <span class="status yellow">
+                                    REVIEW
+                                </span>
+
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>
+                                #FG-1022
+                            </td>
+
+                            <td>
+                                🐘 Wildlife
+                            </td>
+
+                            <td>
+                                Beat 6
+                            </td>
+
+                            <td>
+                                42%
+                            </td>
+
+                            <td>
+
+                                <span class="status green">
+                                    CLOSED
+                                </span>
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= SOS ================= -->
+
+        <section
+            class="page"
+            id="sos"
+        >
+
+            <div class="card sos-container">
+
+                <div class="section-title">
+                    🚨 Emergency Response
+                </div>
+
+                <p class="ai-text">
+
+                    One-tap emergency alert for forest officers.
+
+                </p>
+
+                <br>
+
+                <button
+                    class="sos-button"
+                    onclick="activateSOS()"
+                >
+                    SOS
+                </button>
+
+
+                <div
+                    class="sos-result"
+                    id="sosResult"
+                >
+
+                    <h2>
+                        🚨 SOS ACTIVATED
+                    </h2>
+
+                    <br>
+
+                    <p>
+                        <b>Officer:</b>
+                        <span id="sosOfficer">
+                            Officer 07
+                        </span>
+                    </p>
+
+                    <p>
+                        <b>Location:</b>
+                        Beat 4
+                    </p>
+
+                    <p>
+                        <b>Battery:</b>
+                        18%
+                    </p>
+
+                    <p>
+                        <b>Risk Zone:</b>
+
+                        <span class="danger">
+                            CRITICAL
+                        </span>
+                    </p>
+
+                    <br>
+
+                    <h3>
+                        📡 Live tracking active
+                    </h3>
+
+                    <br>
+
+                    <p class="ai-text">
+                        Nearest available responder:
+                    </p>
+
+                    <h2>
+                        👮 Officer 12
+                    </h2>
+
+                    <p>
+                        Distance:
+                        <b>2.4 km</b>
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= ANALYTICS ================= -->
+
+        <section
+            class="page"
+            id="analytics"
+        >
+
+            <div class="stats">
+
+                <div class="card">
+
+                    <div class="stat-label">
+                        PATROL DISTANCE
+                    </div>
+
+                    <div class="stat-value">
+                        284 km
+                    </div>
+
+                    <div class="stat-label">
+                        This month
+                    </div>
+
+                </div>
+
+
+                <div class="card">
+
+                    <div class="stat-label">
+                        INCIDENTS RESOLVED
+                    </div>
+
+                    <div class="stat-value safe">
+                        87%
+                    </div>
+
+                    <div class="stat-label">
+                        +12% improvement
+                    </div>
+
+                </div>
+
+
+                <div class="card">
+
+                    <div class="stat-label">
+                        FIRE ALERTS
+                    </div>
+
+                    <div id="dashboardRiskScore" class="stat-value danger">
+    --
+</div>       
+
+                    <div class="stat-label">
+                        This month
+                    </div>
+
+                </div>
+
+
+                <div class="card">
+
+                    <div class="stat-label">
+                        AI ALERTS
+                    </div>
+
+                    <div class="stat-value">
+                        63
+                    </div>
+
+                    <div class="stat-label">
+                        Predictions generated
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="section-title">
+                    📊 Forest Protection Overview
+                </div>
+
+                <div style="margin-top:20px">
+
+                    <p class="stat-label">
+                        Patrol Coverage
+                    </p>
+
+                    <div class="progress">
+
+                        <div
+                            style="width:82%"
+                        ></div>
+
+                    </div>
+
+                    <br>
+
+                    <p class="stat-label">
+                        Incident Resolution
+                    </p>
+
+                    <div class="progress">
+
+                        <div
+                            style="width:87%"
+                        ></div>
+
+                    </div>
+
+                    <br>
+
+                    <p class="stat-label">
+                        High-Risk Zone Monitoring
+                    </p>
+
+                    <div class="progress">
+
+                        <div
+                            style="width:94%"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script>
+/* =========================================================
+   FOREST SENTINEL — LIVE DATA ENGINE
+   Sources:
+   - Open-Meteo current/hourly weather + geocoding
+   - OpenStreetMap/Leaflet for mapping
+   - NASA FIRMS for optional satellite fire detections
+   - Browser Geolocation for officer position
+   ========================================================= */
+
+const FG = {
+  lat: null,
+  lon: null,
+  locationName: "Location not set",
+  weather: null,
+  risk: null,
+  fires: [],
+  lastUpdated: null,
+  map: null,
+  marker: null,
+  fireLayer: null,
+  firmsKey: localStorage.getItem("fg_firms_key") || "",
+  visionEndpoint: localStorage.getItem("fg_vision_endpoint") || ""
+};
+
+const $ = id => document.getElementById(id);
+const clamp = (v,min,max) => Math.min(max,Math.max(min,v));
+const round = v => v == null ? "--" : Math.round(Number(v)*10)/10;
+
+function notify(message){
+  let box=$("fgToast");
+  if(!box){
+    box=document.createElement("div");
+    box.id="fgToast";
+    box.style.cssText="position:fixed;right:20px;bottom:20px;z-index:9999;background:#0d2a1c;color:#fff;border:1px solid rgba(19,184,196,.35);padding:14px 16px;border-radius:12px;box-shadow:0 20px 50px #0008;max-width:380px;font-size:13px";
+    document.body.appendChild(box);
+  }
+  box.textContent=message;
+  clearTimeout(window.__fgToast);
+  window.__fgToast=setTimeout(()=>box.remove(),4500);
+}
+
+function escapeHtml(value){
+  return String(value ?? "").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+}
+
+function initLiveControls(){
+  const topbar=document.querySelector(".topbar");
+  if(topbar && !$("fgLiveControls")){
+    const div=document.createElement("div");
+    div.id="fgLiveControls";
+    div.style.cssText="display:flex;gap:8px;align-items:center;flex-wrap:wrap";
+    div.innerHTML=`
+      <span id="fgLocationBadge" class="user-info">📍 Detecting location…</span>
+      <button class="small-btn" onclick="detectLocation()">📍 Use GPS</button>
+      <button class="small-btn" onclick="searchLocation()">🔎 Location</button>
+      <button class="small-btn" onclick="refreshLiveData()">↻ Live refresh</button>`;
+    topbar.appendChild(div);
+  }
+
+  const dashboardMap=document.querySelector("#dashboard .map");
+  if(dashboardMap && !document.getElementById("fgLiveMap")){
+    dashboardMap.innerHTML='<div id="fgLiveMap" style="width:100%;height:100%"></div><div id="fgMapInfo" style="position:absolute;z-index:500;right:12px;top:12px;background:rgba(0,0,0,.72);padding:9px 12px;border-radius:9px;font-size:11px">Live map loading…</div>';
+  }
+
+  const analytics=document.getElementById("analytics");
+  if(analytics && !$("fgDataSettings")){
+    const box=document.createElement("div");
+    box.id="fgDataSettings";
+    box.className="card";
+    box.style.marginTop="20px";
+    box.innerHTML=`
+      <div class="section-title">⚙️ Live Data Configuration</div>
+      <p class="ai-text">The dashboard uses public data sources for weather and mapping. NASA FIRMS fire detections require a free MAP_KEY. Keep private AI provider keys on a backend, never in this HTML.</p>
+      <div style="margin-top:15px">
+        <input id="fgFirmsKey" type="password" placeholder="NASA FIRMS MAP_KEY (optional)" style="width:min(500px,100%);padding:11px;border-radius:9px;border:1px solid var(--border);background:#071f2c;color:white">
+        <button class="small-btn" onclick="saveLiveSettings()">Save</button>
+      </div>
+      <div style="margin-top:15px">
+        <input id="fgVisionEndpoint" type="url" placeholder="Secure AI image endpoint (optional)" style="width:min(500px,100%);padding:11px;border-radius:9px;border:1px solid var(--border);background:#071f2c;color:white">
+        <button class="small-btn" onclick="saveLiveSettings()">Save</button>
+      </div>
+      <div class="demo-note">Risk score shown by this prototype is a transparent weather-based heuristic, not an official fire-danger rating.</div>`;
+    analytics.appendChild(box);
+  }
+
+  if($("fgFirmsKey")) $("fgFirmsKey").value=FG.firmsKey;
+  if($("fgVisionEndpoint")) $("fgVisionEndpoint").value=FG.visionEndpoint;
+}
+
+function initMap(){
+  if(FG.map || !window.L || !$("fgLiveMap")) return;
+
+  FG.map=L.map("fgLiveMap",{
+    center:[20.5937,78.9629],
+    zoom:5,
+    zoomControl:true,
+    preferCanvas:true
+  });
+
+  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{
+    maxZoom:19,
+    attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  }).addTo(FG.map);
+
+  // Leaflet calculates its size while the dashboard may still be hidden.
+  // Recalculate it after the page becomes visible so the tiles fill the map.
+  setTimeout(()=>{ if(FG.map) FG.map.invalidateSize(true); },100);
+  setTimeout(()=>{ if(FG.map) FG.map.invalidateSize(true); },500);
+}
+
+function setLocation(lat,lon,name){
+  FG.lat=Number(lat);
+  FG.lon=Number(lon);
+  FG.locationName=name || "Selected location";
+  const badge=$("fgLocationBadge");
+  if(badge) badge.textContent="📍 "+FG.locationName;
+
+  if(FG.map){
+    FG.map.setView([FG.lat,FG.lon],11);
+    if(FG.marker) FG.map.removeLayer(FG.marker);
+    FG.marker=L.marker([FG.lat,FG.lon]).addTo(FG.map)
+      .bindPopup("<b>"+escapeHtml(FG.locationName)+"</b><br>Current operations location");
+  }
+
+  refreshLiveData();
+}
+
+function detectLocation(){
+  if(!navigator.geolocation){
+    notify("Browser geolocation is not available. Use the location search.");
+    return;
+  }
+  notify("Requesting GPS permission…");
+  navigator.geolocation.getCurrentPosition(
+    p=>setLocation(p.coords.latitude,p.coords.longitude,"Current GPS location"),
+    ()=>notify("GPS permission was denied/unavailable. Use the Location button."),
+    {enableHighAccuracy:true,timeout:10000,maximumAge:120000}
+  );
+}
+
+async function searchLocation(){
+  const query=prompt("Enter city, district, forest area or postal code:");
+  if(!query || query.trim().length<2) return;
+  try{
+    const url="https://geocoding-api.open-meteo.com/v1/search?name="+encodeURIComponent(query.trim())+"&count=8&language=en&format=json";
+    const res=await fetch(url);
+    if(!res.ok) throw new Error("Geocoding HTTP "+res.status);
+    const data=await res.json();
+    if(!data.results?.length){notify("No matching location found.");return;}
+    const list=data.results.map((x,i)=>
+      `${i+1}. ${x.name}${x.admin1?", "+x.admin1:""}${x.country?", "+x.country:""}`
+    ).join("\n");
+    const answer=prompt("Choose a location number:\n\n"+list,"1");
+    const index=Math.max(0,Number(answer||1)-1);
+    const x=data.results[index];
+    if(x) setLocation(x.latitude,x.longitude,`${x.name}${x.admin1?", "+x.admin1:""}${x.country?", "+x.country:""}`);
+  }catch(error){
+    console.error(error);
+    notify("Location search failed. Check your internet connection.");
+  }
+}
+
+async function fetchWeather(){
+  if(FG.lat===null) return;
+  const current=[
+    "temperature_2m","relative_humidity_2m","apparent_temperature",
+    "precipitation","rain","showers","cloud_cover","wind_speed_10m",
+    "wind_direction_10m","wind_gusts_10m","vapour_pressure_deficit",
+    "precipitation_probability","weather_code"
+  ].join(",");
+  const url=`https://api.open-meteo.com/v1/forecast?latitude=${FG.lat}&longitude=${FG.lon}&current=${current}&hourly=${current}&forecast_days=2&timezone=auto`;
+  const res=await fetch(url);
+  if(!res.ok) throw new Error("Weather HTTP "+res.status);
+  FG.weather=await res.json();
+  renderWeather();
+  calculateLiveRisk();
+}
+
+function renderWeather(){
+  const c=FG.weather?.current;
+  if(!c) return;
+
+  const dashboard=document.getElementById("dashboard");
+  if(dashboard){
+    const riskScoreEl=document.getElementById("dashboardRiskScore");
+    if(riskScoreEl && FG.risk) riskScoreEl.textContent=Math.round(FG.risk.score)+"%";
+    const riskStatusEl=document.getElementById("dashboardRiskStatus");
+    if(riskStatusEl && FG.risk) riskStatusEl.textContent=FG.risk.level+" • live weather heuristic";
+  }
+
+  const riskPage=document.getElementById("risk");
+  if(riskPage){
+    const table=riskPage.querySelector("table");
+    if(table){
+      const cells=table.querySelectorAll("tr td:last-child");
+      if(cells[0])cells[0].innerHTML="<b>"+round(c.temperature_2m)+"°C</b>";
+      if(cells[1])cells[1].innerHTML="<b>"+round(c.relative_humidity_2m)+"%</b>";
+      if(cells[2])cells[2].innerHTML="<b>"+round(c.rain)+" mm</b>";
+      if(cells[3])cells[3].innerHTML="<b>"+round(c.wind_speed_10m)+" km/h</b>";
+      if(cells[4])cells[4].innerHTML="<b>"+round(c.wind_gusts_10m)+" km/h</b>";
+      if(cells[5])cells[5].innerHTML="<b>"+(c.vapour_pressure_deficit!=null?round(c.vapour_pressure_deficit)+" kPa":"--")+"</b>";
+    }
+  }
+
+  const recommendation=document.getElementById("dashboardRecommendation");
+  if(recommendation && FG.risk) recommendation.textContent=getRecommendation(FG.risk.score);
+
+  const alertScore=document.getElementById("alertRiskScore");
+  if(alertScore && FG.risk) alertScore.textContent=Math.round(FG.risk.score)+"%";
+
+  const alertBeat=document.getElementById("alertBeat");
+  if(alertBeat) alertBeat.textContent=FG.locationName;
+
+  const aiText=document.querySelector("#dashboard .ai-text");
+  if(aiText) aiText.textContent="Live weather conditions are being evaluated continuously. Satellite fire detections are displayed separately when NASA FIRMS is configured.";
+}
+
+function calculateLiveRisk(){
+  const c=FG.weather?.current;
+  if(!c) return;
+
+  /*
+    Transparent prototype heuristic:
+    temperature 0–35 points
+    low humidity 0–30 points
+    wind 0–15 points
+    low rain 0–10 points
+    VPD 0–10 points
+    This is NOT an official fire-danger index.
+  */
+  const temp=clamp((Number(c.temperature_2m)-18)/25*35,0,35);
+  const humidity=clamp((60-Number(c.relative_humidity_2m))/60*30,0,30);
+  const wind=clamp(Number(c.wind_speed_10m)/50*15,0,15);
+  const rain=clamp((4-Number(c.rain||0))/4*10,0,10);
+  const vpd=clamp(Number(c.vapour_pressure_deficit||0)/4*10,0,10);
+
+  const score=Math.round(clamp(temp+humidity+wind+rain+vpd,0,100));
+  const level=score>=75?"CRITICAL":score>=55?"HIGH":score>=35?"MODERATE":"LOW";
+
+  FG.risk={score,level};
+
+  const dashboard=document.getElementById("dashboard");
+  if(dashboard){
+    const riskScoreEl=document.getElementById("dashboardRiskScore");
+    const riskStatusEl=document.getElementById("dashboardRiskStatus");
+    if(riskScoreEl) riskScoreEl.textContent=score+"%";
+    if(riskStatusEl) riskStatusEl.textContent=level+" • live weather heuristic";
+    if(riskScoreEl){
+      riskScoreEl.classList.remove("danger","warning","safe");
+      riskScoreEl.classList.add(score>=75?"danger":score>=35?"warning":"safe");
+    }
+  }
+
+  const riskScore=document.getElementById("riskEngineScore");
+  if(riskScore) riskScore.textContent=score+"%";
+
+  const progress=document.getElementById("riskProgress");
+  if(progress) progress.style.width=score+"%";
+
+  const status=document.getElementById("riskStatus");
+  if(status){
+    status.textContent=formatRiskLevel(level)+" FIRE RISK";
+    updateStatusClass(status,score);
+  }
+
+  const message=document.getElementById("riskMessage");
+  if(message){
+    message.innerHTML="<b>🤖 Live analysis</b><br><br>"+
+      "Risk score: <strong>"+score+"%</strong><br>"+
+      "Level: <strong>"+formatRiskLevel(level)+"</strong><br><br>"+
+      getRecommendation(score)+"<br><br>"+
+      "<small>Inputs: "+round(c.temperature_2m)+"°C temperature, "+round(c.relative_humidity_2m)+"% humidity, "+round(c.rain)+" mm rain, "+round(c.wind_speed_10m)+" km/h wind, VPD "+round(c.vapour_pressure_deficit)+" kPa.</small>";
+  }
+
+  if(document.getElementById("dashboardRecommendation"))
+    document.getElementById("dashboardRecommendation").textContent=getRecommendation(score);
+
+  latestRiskScore=score;
+  latestRiskLevel=level;
+  latestRecommendation=getRecommendation(score);
+}
+
+function getRecommendation(score){
+  if(score>=75) return "High-priority field verification is appropriate. Follow your department's official fire-response protocol and verify conditions before deployment.";
+  if(score>=55) return "Increase monitoring and patrol attention. Check official fire-danger guidance before operational decisions.";
+  if(score>=35) return "Maintain normal patrol coverage and watch for changes in wind, humidity, temperature and rainfall.";
+  return "Current weather variables indicate comparatively lower fire-weather stress. Continue routine monitoring.";
+}
+
+function formatRiskLevel(level){
+  return String(level||"UNKNOWN").replace(/_/g," ").replace(/\b\w/g,c=>c.toUpperCase());
+}
+
+function updateStatusClass(element,score){
+  element.classList.remove("red","yellow","green");
+  if(score>=75) element.classList.add("red");
+  else if(score>=45) element.classList.add("yellow");
+  else element.classList.add("green");
+}
+
+async function fetchFIRMS(){
+  if(!FG.firmsKey || FG.lat===null) return;
+
+  const d=.8;
+  const bbox=[FG.lon-d,FG.lat-d,FG.lon+d,FG.lat+d].join(",");
+  const url=`https://firms.modaps.eosdis.nasa.gov/api/area/csv/${encodeURIComponent(FG.firmsKey)}/VIIRS_NOAA20_NRT/${bbox}/1`;
+
+  const res=await fetch(url);
+  if(!res.ok) throw new Error("NASA FIRMS HTTP "+res.status);
+
+  const csv=await res.text();
+  FG.fires=parseCSV(csv).slice(0,300);
+  renderFireData();
+  renderFireMarkers();
+}
+
+function parseCSV(text){
+  const lines=text.trim().split(/\r?\n/);
+  if(lines.length<2) return [];
+  const headers=lines[0].split(",");
+  return lines.slice(1).map(line=>{
+    const values=line.split(",");
+    const obj={};
+    headers.forEach((h,i)=>obj[h]=values[i]??"");
+    return obj;
+  }).filter(x=>x.latitude && x.longitude);
+}
+
+function renderFireData(){
+  const table=document.getElementById("incidentTable");
+  if(table && FG.fires.length){
+    const rows=table.querySelectorAll("tr");
+    /* Do not overwrite the incident database; satellite detections belong to the map layer. */
+  }
+
+  const alert=document.getElementById("dashboardRecommendation");
+  if(alert && FG.fires.length && FG.risk?.score>=55)
+    alert.textContent=getRecommendation(FG.risk.score)+" "+FG.fires.length+" recent satellite detection(s) were returned near this location; verify them on the ground.";
+}
+
+function renderFireMarkers(){
+  if(!FG.map) return;
+  if(FG.fireLayer) FG.map.removeLayer(FG.fireLayer);
+  FG.fireLayer=L.layerGroup().addTo(FG.map);
+
+  FG.fires.forEach(f=>{
+    const lat=Number(f.latitude),lon=Number(f.longitude);
+    if(!Number.isFinite(lat)||!Number.isFinite(lon)) return;
+    L.circleMarker([lat,lon],{
+      radius:6,color:"#ff4d5e",fillColor:"#ff4d5e",fillOpacity:.8,weight:1
+    }).bindPopup(
+      "<b>NASA FIRMS satellite detection</b><br>"+
+      "Lat: "+lat.toFixed(4)+"<br>"+
+      "Lon: "+lon.toFixed(4)+"<br>"+
+      "Confidence: "+escapeHtml(f.confidence||"--")+"<br>"+
+      "FRP: "+escapeHtml(f.frp||"--")
+    ).addTo(FG.fireLayer);
+  });
+}
+
+function optimizePatrol(){
+  const result=document.getElementById("patrolResult");
+  if(!result) return;
+
+  const score=FG.risk?.score??48;
+  const level=FG.risk?.level??"MODERATE";
+  const location=FG.locationName && FG.locationName!=="Location not set" ? FG.locationName : "Demo Forest Zone";
+  const p2=Math.max(25,Math.round(score*0.78));
+  const p3=Math.max(15,Math.round(score*0.58));
+
+  result.innerHTML=`
+    <div class="route">
+      <div class="route-item">🔴 <b>Priority 1 — ${escapeHtml(location)}</b><br>Current fire-weather risk: <b>${score}% (${level})</b><br><span class="user-info">Immediate verification recommended.</span></div>
+      <div class="route-item">🟠 <b>Priority 2 — Adjacent high-risk zone</b><br>Estimated risk: <b>${p2}%</b><br><span class="user-info">Increase patrol frequency.</span></div>
+      <div class="route-item">🟡 <b>Priority 3 — Coverage check</b><br>Estimated risk: <b>${p3}%</b><br><span class="user-info">Verify officer availability and communications.</span></div>
+    </div>`;
+  notify("AI patrol route optimized successfully.");
+}
+
+async function analyzeImageLive(){
+  const input=document.getElementById("imageInput");
+  if(!input?.files?.length) return;
+
+  const preview=document.getElementById("preview");
+  if(preview){
+    preview.src=URL.createObjectURL(input.files[0]);
+    preview.style.display="block";
+  }
+
+  if(!FG.visionEndpoint){
+    const resultBox=document.getElementById("visionResult");
+    const loading=document.getElementById("visionLoading");
+    if(loading) loading.style.display="block";
+    setTimeout(()=>{
+      if(loading) loading.style.display="none";
+      if(resultBox){
+        resultBox.style.display="block";
+        resultBox.innerHTML=`
+          <h2>🔥 DEMO AI VISION RESULT</h2><br>
+          <p><b>Detection:</b> Possible smoke / fire</p>
+          <p><b>Confidence:</b> 94.7%</p>
+          <p><b>Severity:</b> <span class="danger">HIGH</span></p>
+          <p><b>Location:</b> ${escapeHtml(FG.locationName||"Demo Forest Zone")}</p>
+          <p><b>Recommendation:</b> Immediate field verification</p>
+          <br><button class="small-btn" onclick="createIncident()">🚨 Create Incident</button>`;
+      }
+      notify("Demo AI vision analysis completed. Configure a backend endpoint for real model inference.");
+    },900);
+    return;
+  }
+
+  const form=new FormData();
+  form.append("image",input.files[0]);
+
+  try{
+    const res=await fetch(FG.visionEndpoint,{method:"POST",body:form});
+    if(!res.ok) throw new Error("Vision HTTP "+res.status);
+    const data=await res.json();
+
+    const resultBox=document.getElementById("visionResult");
+    if(resultBox){
+      resultBox.style.display="block";
+      resultBox.innerHTML="<b>🤖 AI result</b><br><pre style='white-space:pre-wrap'>"+
+        escapeHtml(JSON.stringify(data,null,2))+"</pre>";
+    }
+  }catch(error){
+    console.error(error);
+    notify("AI image analysis failed. Check your secure backend endpoint and CORS settings.");
+  }
+}
+
+function previewImageOnly(){
+  const input=document.getElementById("imageInput");
+  const preview=document.getElementById("preview");
+  if(input?.files?.length && preview){
+    preview.src=URL.createObjectURL(input.files[0]);
+    preview.style.display="block";
+  }
+}
+
+function incidents(){
+  try{return JSON.parse(localStorage.getItem("fg_incidents")||"[]")}catch{return[]}
+}
+function saveIncidents(list){localStorage.setItem("fg_incidents",JSON.stringify(list));renderIncidents();}
+function renderIncidents(){
+  const tbody=document.getElementById("incidentTable");
+  if(!tbody)return;
+  const list=incidents();
+  tbody.innerHTML=list.length?list.map(x=>`
+    <tr>
+      <td>${escapeHtml(x.id)}</td>
+      <td>${escapeHtml(x.type)}</td>
+      <td>${escapeHtml(x.location)}</td>
+      <td>${escapeHtml(x.risk)}%</td>
+      <td><span class="status ${x.risk>=75?"red":x.risk>=45?"yellow":"green"}">${escapeHtml(x.status)}</span></td>
+    </tr>`).join(""):"<tr><td colspan='5' class='user-info'>No incidents recorded in this browser.</td></tr>";
+}
+function createIncident(){
+  const list=incidents();
+  const risk=FG.risk?.score??0;
+  list.unshift({
+    id:"#FG-"+Date.now().toString().slice(-7),
+    type:"AI/Field incident",
+    location:FG.locationName,
+    risk,
+    status:risk>=75?"CRITICAL":risk>=45?"REVIEW":"OPEN",
+    time:new Date().toISOString()
+  });
+  saveIncidents(list);
+  notify("Incident saved locally. A production system needs a shared backend/database.");
+}
+
+function activateSOS(){
+  const user=document.getElementById("currentUser")?.innerText||"Forest Officer";
+  const result=document.getElementById("sosResult");
+  const officer=document.getElementById("sosOfficer");
+  if(officer) officer.textContent=user;
+  if(result) result.style.display="block";
+  notify("SOS demo activated. No emergency service was contacted.");
+}
+
+function saveLiveSettings(){
+  FG.firmsKey=document.getElementById("fgFirmsKey")?.value.trim()||"";
+  FG.visionEndpoint=document.getElementById("fgVisionEndpoint")?.value.trim()||"";
+  localStorage.setItem("fg_firms_key",FG.firmsKey);
+  localStorage.setItem("fg_vision_endpoint",FG.visionEndpoint);
+  notify("Live data settings saved.");
+  refreshLiveData();
+}
+
+async function refreshLiveData(){
+  if(FG.lat===null){
+    notify("Choose a location first.");
+    return;
+  }
+
+  const badge=document.getElementById("fgLocationBadge");
+  if(badge) badge.textContent="📍 "+FG.locationName+" · refreshing…";
+
+  try{await fetchWeather();}catch(e){console.error(e);notify("Weather API refresh failed.");}
+  if(FG.firmsKey){
+    try{await fetchFIRMS();}catch(e){console.error(e);notify("NASA FIRMS could not be loaded. Check your MAP_KEY.");}
+  }
+
+  FG.lastUpdated=new Date();
+  if(badge) badge.textContent="📍 "+FG.locationName+" · live";
+  const mapInfo=document.getElementById("fgMapInfo");
+  if(mapInfo) mapInfo.innerHTML="📡 Live map<br>Updated "+FG.lastUpdated.toLocaleTimeString();
+
+  updateDashboardNumbers();
+}
+
+function updateDashboardNumbers(){
+  const officerEl=document.getElementById("activeOfficers");
+  const incidentEl=document.getElementById("activeIncidents");
+  const patrolEl=document.getElementById("patrolCoverage");
+
+  // Keep the dashboard headings intact. Only update their values.
+  if(officerEl) officerEl.textContent="24";
+  if(incidentEl) incidentEl.textContent=String(Math.max(7, incidents().length)).padStart(2,"0");
+  if(patrolEl) patrolEl.textContent="82%";
+
+  const officerSub=document.getElementById("officerSubtext");
+  const incidentSub=document.getElementById("incidentSubtext");
+  const patrolSub=document.getElementById("patrolSubtext");
+  if(officerSub) officerSub.textContent="18 currently patrolling";
+  if(incidentSub) incidentSub.textContent="2 require attention";
+  if(patrolSub) patrolSub.textContent="+14% today";
+}
+
+function login(){
+  const username=document.getElementById("username")?.value.trim()||"Forest Officer";
+  document.getElementById("currentUser").innerText=username;
+  document.getElementById("sosOfficer").innerText=username;
+  document.getElementById("patrolOfficer").innerText=username;
+  document.getElementById("loginScreen").style.display="none";
+  document.getElementById("app").style.display="block";
+
+  initLiveControls();
+  initMap();
+  renderIncidents();
+
+  const input=document.getElementById("imageInput");
+  if(input)input.onchange=previewImageOnly;
+
+  /* Ask for location only after the user has chosen to enter the app. */
+  detectLocation();
+}
+
+function showPage(page,element){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  const selected=document.getElementById(page);
+  if(selected)selected.classList.add("active");
+
+  document.querySelectorAll(".nav-item").forEach(n=>n.classList.remove("active"));
+  if(element)element.classList.add("active");
+
+  const titles={
+    dashboard:"Forest Intelligence Dashboard",
+    risk:"Live AI Forest Risk Engine",
+    patrol:"Dynamic Patrol Planner",
+    incident:"AI Incident Vision",
+    incidents:"Incident Management",
+    sos:"Emergency Response",
+    analytics:"Forest Analytics"
+  };
+  const title=document.getElementById("pageTitle");
+  if(title)title.innerText=titles[page]||"Forest Sentinel";
+
+  if(page==="analytics")updateDashboardNumbers();
+
+  // Fix Leaflet sizing whenever the dashboard is shown again.
+  if(page==="dashboard" && FG.map){
+    setTimeout(()=>FG.map.invalidateSize(true),50);
+    setTimeout(()=>FG.map.invalidateSize(true),300);
+  }
+}
+
+function zoneInfo(zone){
+  if(FG.risk){
+    alert(
+      "🌲 LIVE LOCATION\n\n"+
+      "Selected area: "+FG.locationName+"\n"+
+      "Fire-weather risk: "+FG.risk.score+"%\n"+
+      "Level: "+FG.risk.level+"\n\n"+
+      "Satellite detections near this location: "+FG.fires.length
+    );
+  }else notify("Load live weather first.");
+}
+
+async function runRiskAnalysis(){
+  const button=event?.currentTarget;
+  const originalText=button?.innerText;
+  if(button){button.disabled=true;button.innerText="🤖 Analyzing…";}
+  try{
+    // If live weather is already loaded, calculate immediately.
+    if(FG.weather?.current){
+      calculateLiveRisk();
+      notify("AI risk analysis completed using the latest weather data.");
+      return;
+    }
+
+    // Try live weather first when a location is available.
+    if(FG.lat!==null){
+      await fetchWeather();
+      if(FG.risk){
+        notify("AI risk analysis completed using live weather data.");
+        return;
+      }
+    }
+
+    // Demo fallback so the button always gives a visible result.
+    const demo={
+      temperature_2m:38,
+      relative_humidity_2m:21,
+      rain:2,
+      wind_speed_10m:28,
+      vapour_pressure_deficit:2.8
+    };
+    FG.weather={current:demo};
+    calculateLiveRisk();
+    notify("Demo risk analysis completed. Select a GPS/location to use live weather data.");
+  }catch(error){
+    console.error(error);
+    notify("Risk analysis failed. Try Use GPS or Location first.");
+  }finally{
+    if(button){button.disabled=false;button.innerText=originalText||"🤖 Run AI Analysis";}
+  }
+}
+
+function optimizePatrolLegacy(){optimizePatrol();}
+function analyzeImage(){analyzeImageLive();}
+function createIncidentLegacy(){createIncident();}
+
+let latestRiskScore=0;
+let latestRiskLevel="UNKNOWN";
+let latestRecommendation="";
+
+window.addEventListener("resize",()=>{
+  if(FG.map) setTimeout(()=>FG.map.invalidateSize(true),100);
+});
+
+document.addEventListener("DOMContentLoaded",()=>{
+  /* Leaflet is loaded at the bottom of the original document. */
+  setTimeout(()=>{
+    initLiveControls();
+    initMap();
+  },700);
+
+  setInterval(()=>{
+    if(FG.lat!==null) refreshLiveData();
+  },15*60*1000);
+});
+</script>
+
+
+</body>
+</html>
